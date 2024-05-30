@@ -20,8 +20,8 @@ multi_scale = True  # if use multiscale dataset model training
 pe_interpolation = 1.0
 
 # training setting
-num_workers = 12
-train_batch_size = 48  # 48 as default
+num_workers = 6
+train_batch_size = 16  # 48 as default
 num_epochs = 200  # 3
 gradient_accumulation_steps = 1
 grad_checkpointing = True
