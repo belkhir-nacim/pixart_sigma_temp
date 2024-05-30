@@ -277,6 +277,10 @@ def parse_args():
 
 
 if __name__ == '__main__':
+    import platform
+
+
+    print('in the code', platform.node())
     args = parse_args()
     config = read_config(args.config)
     if args.work_dir is not None:

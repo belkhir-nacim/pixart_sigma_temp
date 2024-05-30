@@ -5,7 +5,7 @@
 ##SBATCH --time 0:30:00     # format: HH:MM:SS
 #SBATCH -N 2             # 4 node
 #SBATCH -c 8           # 1 cpu per task
-#SBATCH --gres=gpu:1                # 1GPU
+#SBATCH --gres=gpu:4                # 1GPU
 #SBATCH --job-name=train_pixel_cc12
 #SBATCH --output=log_train_toy_4gpu_2node.out  # Nom du fichier de sortie
 #SBATCH --error=log_train_toy_4gpu_2node.err  # Nom du fichier d'erreur
@@ -42,8 +42,19 @@ echo "NODELIST="${SLURM_NODELIST}
 # #           --load-from output/pretrained_models/PixArt-Sigma-XL-2-512-MS.pth \
 # #           --work-dir output/your_first_pixart-exp
 
-srun python -m torch.distributed.launch --nproc_per_node=1 --nnodes=2  --master_addr=$MASTER_ADDR --master_port=$MASTER_PORT \
-          train_scripts/train.py \
-          configs/pixart_sigma_config/PixArt_sigma_xl2_img512_internalms_custom.py \
+# srun torchrun --nproc_per_node=1 --nnodes=2  --master_addr=$MASTER_ADDR --master_port=$MASTER_PORT \
+#           train_scripts/train.py \
+#           configs/pixart_sigma_config/PixArt_sigma_xl2_img512_internalms_custom.py \
+#           --load-from output/pretrained_models/PixArt-Sigma-XL-2-512-MS.pth \
+#           --work-dir output/your_first_pixart-exp
+
+
+srun accelerate launch --multi_gpu  --num_processes 4 --num_machines 2 \
+        --mixed_precision fp16 \
+        --rdzv_backend static \
+        --main_process_ip "$MASTER_ADDR" \
+        --main_process_port "$MASTER_PORT" \
+        --machine_rank "$SLURM_NODEID" \
+          train_scripts/train.py configs/pixart_sigma_config/PixArt_sigma_xl2_img512_internalms_custom.py \
           --load-from output/pretrained_models/PixArt-Sigma-XL-2-512-MS.pth \
           --work-dir output/your_first_pixart-exp

@@ -1,6 +1,18 @@
 <p align="center">
   <img src="asset/logo-sigma.png"  height=120>
 </p>
+NB: 
+* the dataset should be at the pixart sigma format (see the original readme)
+* make symbolic link to a output  at the current folder of a created one from a scratch folder 
+
+```
+mkdir -p $SCRATCH/output 
+ln -s $SCRATCH/output  output
+```
+
+USE the [text](slurm_train_multi_node_multigpu.sh)  for multi node multi gpu
+
+
 
 ### <div align="center">👉 PixArt-Σ: Weak-to-Strong Training of Diffusion Transformer for 4K Text-to-Image Generation<div> 
 
